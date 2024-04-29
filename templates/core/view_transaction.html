@@ -1,0 +1,47 @@
+{%  load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Transactions</title>
+    <link rel="stylesheet" href="{% static 'css/view_transaction.css' %}">
+</head>
+<body>
+<header>
+    <h1>View Transactions</h1>
+</header>
+<main>
+    <h2>{{ username }}</h2>
+    <section class="transaction-list">
+        <h2>Recent Transactions</h2>
+        <h4>Inward transaction list</h4>
+        <ul>
+            {% for transaction in inward_transactions %}
+                <li>
+                    <span class="transaction-date">{{ transactions }}</span>
+                    <span class="transaction-date">{{ transaction.date }}</span>
+                    <span class="transaction-amount">{{ transaction.amount }}</span>
+                    <!-- Add more transaction details as needed -->
+                </li>
+            {% endfor %}
+        </ul>
+        <h4>Outward transaction list</h4>
+        <ul>
+            {% for transaction in outward_transactions %}
+                <li>
+                    <span class="transaction-date">{{ transactions }}</span>
+                    <span class="transaction-date">{{ transaction.date }}</span>
+                    <span class="transaction-amount">{{ transaction.amount }}</span>
+                    <!-- Add more transaction details as needed -->
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+</main>
+<footer>
+    <!-- Footer content if needed -->
+</footer>
+</body>
+</html>

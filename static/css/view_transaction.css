@@ -1,0 +1,45 @@
+/* view_transactions.css */
+
+/* Reset default margin and padding */
+body, h1, h2, p, ul, li {
+    margin: 0;
+    padding: 0;
+}
+
+/* Apply basic styling to header */
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Apply basic styling to main content section */
+main {
+    padding: 20px;
+}
+
+/* Apply styling to transaction list */
+.transaction-list {
+    margin-top: 20px;
+}
+
+/* Style transaction list items */
+.transaction-list ul {
+    list-style-type: none;
+}
+
+.transaction-list li {
+    margin-bottom: 10px;
+}
+
+/* Style transaction details */
+.transaction-date {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.transaction-amount {
+    font-style: italic;
+    color: #555;
+}
