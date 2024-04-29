@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 # Create your views here.
-@csrf_exempt
+@api_view(['Post'])
 def convert_currency(request):
     try:
         if request.method == 'POST':
@@ -47,5 +47,5 @@ def convert_currency(request):
             else:
                 res = {'error': 'Conversion not available for provided currencies'}
             return JsonResponse(res) #json response
-    except json.JSONDecodeError:
+    except Exception as e:
         return JsonResponse({'error': 'Invalid data format provided! API only accepts JSON data'})
