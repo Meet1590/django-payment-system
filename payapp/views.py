@@ -50,14 +50,16 @@ def make_payment(request):
                     currency=src_user.currency
                 )
                 t.save()
-                return render(request, "core/view_transaction.html",
-                              {"Account balance": src_user, "dst_points": dst_user})
+
+                # return render(request, "core/view_transaction.html",
+                #               {"Account balance": src_user, "dst_points": dst_user})
+                return redirect('/view_user_transactions/',transaction = t, Account_balance=src_user,dst_points=dst_user)
             else:
                 html = '<h3> Please ensure you have sufficient balance and recipient is registered with us!</h3>'
                 return render(request, html)
     else:
         form = TransactionForm()
-
+        # return redirect('/make_payment/',form=form)
     return render(request, "transactions/make_payment.html", context={
         'form':form
     })
@@ -96,6 +98,7 @@ def admin(request):
 @login_required
 def view_user_transactions(request):
     user = CustomUser.objects.get(email=request.user.email)
+    print(user.email)
     inward_transactions = Transaction.objects.filter(destination_user_email=user.email).order_by('-timestamp')
     outward_transactions = Transaction.objects.filter(source_user_email=user.email).order_by('-timestamp')
 
@@ -127,7 +130,7 @@ def dashboard_view(request):
 #Payment request views
 
 
-@login_required
+# @login_required
 def create_payment_request(request):
     users = CustomUser.objects.all()
     if request.method == 'POST':

@@ -3,6 +3,7 @@ from .forms import RegisterForm, EmailAuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
+from .cutom_backend import CustomAuthBackend
 
 from .models import CustomUser
 
@@ -11,7 +12,10 @@ from .models import CustomUser
 def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
+        print(form)
+        print(form.is_valid())
         if form.is_valid():
+            print(form.is_valid())
             # Log the user in after registration
             username = request.POST['username']
             email = request.POST['email']
@@ -24,33 +28,34 @@ def register(request):
             print(user_extra)
             # Retrieve the user object
             #user = form.cleaned_data.get('username')
-            login(request, user)
+            login(request, user,backend='django.contrib.auth.backends.ModelBackend')
             context = {
                 'username': user.username,
             }
             print(user.username)
             return render(request, 'transactions/make_payment.html', context)  # Redirect to home page after registration
+            # return redirect('/make_payment/',username=request.user.username)
     else:
         form = RegisterForm()
     return render(request, 'register/register.html', {'form': form})
 
 
-#evaluating login req
+# evaluating login req
 @csrf_exempt
 def user_login(request):
     if request.method == 'POST':
-        form = EmailAuthenticationForm(request, data=request.POST)
-        print(form.is_valid())
-        print(form.cleaned_data)
-        print(form.errors)
-        if form:
-            email = request.POST['email']
-            password = request.POST['password']
+        print('helloo')
+        form = EmailAuthenticationForm(data=request.POST)
+
+        if form.is_valid():
+            email = form.cleaned_data.get('email')
+            password = form.cleaned_data.get('password')
             print(email, password)
-            user = authenticate(email=email, password=password)  # Retrieve the user object
-            print(type(user))
-            login(request, user)
-            return redirect('home')
+            user = CustomAuthBackend().authenticate(request = request, email=email, password=password)
+            if user is not None:# Retrieve the user object
+                print(type(user))
+                login(request, user,backend='django.contrib.auth.backends.ModelBackend')
+                return redirect('home')
         return render(request, 'register/login.html', {'form': form})
     else:
         form = EmailAuthenticationForm()
@@ -70,7 +75,8 @@ def home(request):
     context = {
         'current_user': user,
     }
-    return render(request, 'core/base.html', context=context)
+    return render(request, 'core/home.html', context=context)
+    return redirect('/home',current_user=user)
 
 
 def view_transactions(request):

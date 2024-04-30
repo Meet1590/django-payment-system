@@ -14,7 +14,6 @@ typing_extensions~=4.11.0
 parso~=0.8.4
 jedi~=0.19.1
 requests~=2.31.0
-pywin32~=306
 yarg~=0.1.9
 setuptools~=68.2.0
 six~=1.16.0

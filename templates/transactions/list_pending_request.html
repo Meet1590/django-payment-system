@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pending Payment Requests</title>
+</head>
+<body>
+<h1>Pending Payment Requests</h1>
+{% if pending_requests %}
+    <ul>
+        {% for request in pending_requests %}
+            <li>
+                <p>Request ID: {{ request.id }}</p>
+                <p>From: {{ request.sender_email }}</p>
+                <p>Amount: {{ request.amount }}</p>
+                <p>Status: {{ request.status }}</p>
+                <a href="{% url 'handle_response_to_request' request.id %}">Respond to Request</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No pending payment requests.</p>
+{% endif %}
+</body>
+</html>

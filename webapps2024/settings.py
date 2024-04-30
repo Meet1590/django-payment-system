@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     ]
 
 AUTHENTICATION_BACKENDS = [
-    #'register.cutom_backend.CustomAuthBackend' #ignored due to errors
+    'register.cutom_backend.CustomAuthBackend', #ignored due to errors
     'django.contrib.auth.backends.ModelBackend',
 ]
 

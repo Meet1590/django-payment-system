@@ -4,7 +4,6 @@ from .models import CustomUser
 
 class CustomAuthBackend(BaseBackend):
     def authenticate(self, request, email=None, password=None):
-
         try:
             # Your custom authentication logic goes here
             user = CustomUser.objects.get(email=email)

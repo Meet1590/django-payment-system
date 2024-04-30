@@ -26,7 +26,7 @@ urlpatterns = (
     path('admin/', admin.site.urls),
     path('register/', registerApp.register, name='register'),
     path('login/', registerApp.user_login, name='login'),
-    path('home/', registerApp.home, name='base'),
+    path('home/', registerApp.home, name='home'),
     path('make_payment/', payApp.make_payment, name='make_payment'),
     path('view_transactions/', registerApp.view_transactions, name='view_transactions'),
     path('convert_currency/', currencyConverterApp.convert_currency, name='convert_currency'),

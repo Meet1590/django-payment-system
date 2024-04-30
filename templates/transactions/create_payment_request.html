@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Header with Options</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: white;
+            box-shadow: 2px 2px 10px #35037a;
+            color: #35037a;
+            padding: 5px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed; /* Fix the header position */
+            top: 0; /* Stick it to the top */
+            width: 100%;
+        }
+
+        header ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0px 20px;
+        }
+
+        header li {
+            display: inline;
+            margin-right: 0px;
+            padding-right: 20px;
+        }
+
+        header li:last-child {
+            margin-right: 0;
+        }
+
+        header a {
+            color: #35037a;
+            text-decoration: none;
+            padding: 0px;
+            font-weight: 600;
+        }
+
+        .form_create_req{
+            {#margin-top: 200px;#}
+            height: 280px;
+            width: 36%;
+            text-align: center;
+        }
+
+        .form_create_req form{
+            text-align: start;
+            margin-top: 45px;
+            {#margin-left: 100px;#}
+        }
+
+        #recipient{
+            padding: 10px;
+            width: 49%;
+            font-size: 15px;
+            {#margin-left: 40px;#}
+        }
+
+        footer {
+            background-color: #35037a;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .container {
+            display: flex;
+            margin-top: 40px;
+        {#height: 100vh;#}
+        }
+
+        .sidebar {
+            background-color: #35037a;
+            color: #fff;
+            width: 200px;
+            padding: 20px;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            margin-bottom: 10px;
+            color: white;
+            padding: 15px 0px;
+        }
+
+        .sidebar li a {
+            color: white;
+            text-decoration: none;
+            /* padding: 15px 0px; */
+        }
+
+        {#.content {#}
+        {#    flex: 1;#}
+        {#    padding: 20px;#}
+
+
+        .content h2 {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <p>{{ username}}</p>
+    <nav>
+        <ul>
+            <li><a href="/home/">Home</a></li>
+            <li><a href="/register/">Register</a></li>
+            <li><a href="/login/">Login</a></li>
+        </ul>
+    </nav>
+</header>
+
+<div class="container" style="display: flex; height: 100vh">
+    <div
+            class="sidebar"
+            style="
+					background-color: #35037a;
+					color: #fff;
+					width: 200px;
+					padding: 20px;
+				"
+    >
+        <ul style="list-style-type: none; padding: 0">
+            <li style="margin-bottom: 10px; color: white; padding: 15px 0px">
+                <a
+                        href="/make_payment/"
+                        style="color: white; text-decoration: none"
+                >
+                    Make Payment</a
+                >
+            </li>
+            <li style="margin-bottom: 10px; color: white; padding: 15px 0">
+                <a
+                        href="/create-payment-request/"
+                        style="color: white; text-decoration: none"
+                >Make Payment Request</a
+                >
+            </li>
+            <li style="margin-bottom: 10px; color: white; padding: 15px 0px">
+                <a
+                        href="/view_user_transactions/"
+                        style="color: white; text-decoration: none"
+                >Show All Transactions</a
+                >
+            </li>
+        </ul>
+    </div>
+
+    <!-- make_payment_request.html -->
+
+    <div
+            class="form_create_req"
+            style="
+					{#max-width: 400px;#}
+					margin: 100px auto;
+					padding: 20px;
+					border: 3px solid #ccc;
+					border-radius: 5px;
+					background-color: #f3f3fb;
+				"
+    >
+        <h2>Create Payment Request</h2>
+        <form  method="post">
+            {% csrf_token %}
+            <div style="margin-bottom: 20px; margin-left: 70px">
+                <label for="recipient" style="font-weight: bold"
+                >Recipient Email:</label
+                >
+                <select name="recipient" id="recipient">
+                    <option value="">Select a User</option>
+                    {% for user in users %}
+                        <option value="{{ user.email }}">{{ user.email }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div style="margin-bottom: 20px; margin-left: 130px">
+                <label for="amount" style="font-weight: bold">Amount:</label>
+                <input
+                        type="number"
+                        id="amount"
+                        name="amount"
+                        required
+                        style="
+								width: 55%;
+								padding: 8px;
+								border: 1px solid #000;
+								{#border-radius: 5px;#}
+								box-sizing: border-box;
+							"
+                />
+            </div>
+            <div style="margin-bottom: 20px; margin-left: 200px">
+                <button
+                        type="submit"
+                        style="
+								padding: 10px 20px;
+								background-color: #002c95;
+								color: #fff;
+								border: none;
+								border-radius: 5px;
+								cursor: pointer;
+								{#margin-left: 30%;#}
+                                font-size: 15px;
+								width: 50%;
+							"
+                >
+                    Submit Request
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<footer>
+    <!-- <p>This is a simple footer.</p> -->
+    <p>&copy; 2024 Your Company</p>
+</footer>
+</body>
+</html>
+
+
+
+
+
+
+
+
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <title>Create Payment Request</title>#}
+{#</head>#}
+{#<body>#}
+{#<h1>Create Payment Request</h1>#}
+{#<form method="post">#}
+{#    {% csrf_token %}#}
+{#    <label for="recipient">Recipient Email:</label>#}
+{#    <select name="recipient" id="recipient">#}
+{#        <option value="">Select a User</option>#}
+{#        {% for user in users %}#}
+{#            <option value="{{ user.email }}">{{ user.email }}</option>#}
+{#        {% endfor %}#}
+{#    </select>#}
+{#    <br>#}
+{#    <label for="amount">Amount:</label>#}
+{#    <input type="number" id="amount" name="amount" required>#}
+{#    <br>#}
+{#    <button type="submit">Submit Request</button>#}
+{#</form>#}
+{#</body>#}
+{#</html>#}

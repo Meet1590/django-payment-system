@@ -23,6 +23,9 @@
             width: 100%;
         }
 
+        header p{
+            color: #0f0f0f;
+        }
         header ul {
             list-style-type: none;
             margin: 0;
@@ -31,7 +34,7 @@
 
         header li {
             display: inline;
-            margin-right: 0px;
+            margin-right: 0;
             padding-right: 20px;
         }
 
@@ -42,7 +45,7 @@
         header a {
             color: #35037a;
             text-decoration: none;
-            padding: 0px;
+            padding: 0;
             font-weight: 600;
         }
 
@@ -56,18 +59,7 @@
             width: 100%;
         }
 
-        .container {
-            display: flex;
-            margin-top: 40px;
-        {#height: 100vh;#}
-        }
 
-        .sidebar {
-            background-color: #35037a;
-            color: #fff;
-            width: 200px;
-            padding: 20px;
-        }
 
         .sidebar ul {
             list-style-type: none;
@@ -77,7 +69,7 @@
         .sidebar li {
             margin-bottom: 10px;
             color: white;
-            padding: 15px 0px;
+            padding: 15px 0;
         }
 
         .sidebar li a {
@@ -86,10 +78,10 @@
             /* padding: 15px 0px; */
         }
 
-        {#.content {#}
-        {#    flex: 1;#}
-        {#    padding: 20px;#}
-
+        .content {
+            flex: 1;
+            padding: 20px;
+        }
 
         .content h2 {
             margin-bottom: 20px;
@@ -101,33 +93,15 @@
     <p>{{ username}}</p>
     <nav>
         <ul>
-            <li><a href="/home/">Home</a></li>
-            <li><a href="/register/">Register</a></li>
-            <li><a href="/login/">Login</a></li>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Register</a></li>
+            <li><a href="#">Login</a></li>
         </ul>
     </nav>
 </header>
-<div class="container" style="display: flex;height: 100vh;">
-    <div class="sidebar" style="background-color: #35037a;color: #fff; width: 200px; padding: 20px;">
-        <ul style="list-style-type: none; padding: 0;">
-            <li style="margin-bottom: 10px;color: white;padding: 15px 0px;"><a href="/make_payment/" style="color: white;text-decoration: none"> Make Payment</a></li>
-            <li style="margin-bottom: 10px;color: white;padding: 15px 0;"><a href="/create-payment-request/" style="color: white;text-decoration: none">Make Payment Request</a></li>
-            <li style="margin-bottom: 10px;color: white;padding: 15px 0px;"><a href="/view_user_transactions/" style="color: white;text-decoration: none">Show All Transactions</a></li>
-        </ul>
+    <div> 
+        {% include 'core/dashboard.html' %}
     </div>
-    <div>
-        <h1>Welcome to Our Payment Service</h1>
-    </div>
-    {#    <p>Hello </p>#}
-    {#    <div class="content">{% include 'transactions/makepayment.html' %}</div>#}
-</div>
-
-<main>
-    <section>
-        <h2>{{ welcome_message }}</h2>
-        <!-- Add any other content you want to display -->
-    </section>
-</main>
 <footer>
     <!-- <p>This is a simple footer.</p> -->
     <p>&copy; 2024 Your Company</p>
