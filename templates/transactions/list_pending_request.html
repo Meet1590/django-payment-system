@@ -1,25 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Pending Payment Requests</title>
-</head>
-<body>
-<h1>Pending Payment Requests</h1>
+
+<div style="position: absolute; top:90px; right: 30px">
+{#<h1>Pending Payment Requests</h1>#}
 {% if pending_requests %}
-    <ul>
+    <ul class="payment_req_list" style="margin: 0px;padding: 0px; width:980px;border: 2px solid darkblue;">
         {% for request in pending_requests %}
-            <li>
-                <p>Request ID: {{ request.id }}</p>
-                <p>From: {{ request.sender_email }}</p>
-                <p>Amount: {{ request.amount }}</p>
-                <p>Status: {{ request.status }}</p>
-                <a href="{% url 'handle_response_to_request' request.id %}">Respond to Request</a>
+            <li style="list-style: none;background-color: white; color: black;border-bottom: 1px solid darkblue;">
+                <p style="display: inline-block;padding: 10px;"><span style=" font-weight: 600;">Request ID:</span> {{ request.id }}</p>
+                <p style="display: inline-block;padding: 10px;"><span style=" font-weight: 600;">From:</span> {{ request.sender.email }}</p>
+                <p style="display: inline-block;padding: 10px;"><span style=" font-weight: 600;">To:</span> {{ request.recipient.email }}</p>
+                <p style="display: inline-block;padding: 10px;"><span style=" font-weight: 600;">Amount:</span> {{ request.amount }}</p>
+                <p style="display: inline-block;padding: 10px;"><span style=" font-weight: 600;">Status:</span> {{ request.status }}</p>
+               <p style="display: inline-block;padding: 10px;"> <a href="{% url 'handle_response_to_request' request.id %}">Respond to Request</a></p>
             </li>
         {% endfor %}
     </ul>
 {% else %}
     <p>No pending payment requests.</p>
 {% endif %}
-</body>
-</html>
+</div>

@@ -6,17 +6,18 @@
 </head>
 <body>
 <h1>Handle Payment Request</h1>
-<p>Request ID: {{ request_id }}</p>
-<p>From: {{ request.sender_email }}</p>
-<p>Amount: {{ request.amount }}</p>
-<p>Status: {{ request.status }}</p>
+<p>Request ID: {{ payment_request.id }}</p>
+<p>From: {{ payment_request.sender.email }}</p>
+<p>To: {{ payment_request.recipient.email }}</p>
+<p>Amount: {{ payment_request.amount }}</p>
+<p>Status: {{ payment_request.status }}</p>
 <form method="post">
     {% csrf_token %}
     <input type="hidden" name="request_id" value="{{ request_id }}">
     <label for="response">Response:</label>
     <select name="response" id="response" required>
-        <option value="accept">Accept</option>
-        <option value="reject">Reject</option>
+        <option value="accept"  >Accept</option>
+        <option value="reject" >Reject</option>
     </select>
     <br>
     <button type="submit">Submit Response</button>

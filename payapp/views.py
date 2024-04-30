@@ -102,6 +102,7 @@ def view_user_transactions(request):
     inward_transactions = Transaction.objects.filter(destination_user_email=user.email).order_by('-timestamp')
     outward_transactions = Transaction.objects.filter(source_user_email=user.email).order_by('-timestamp')
 
+    print(inward_transactions)
     context = {
         'inward_transactions': inward_transactions,
         'outward_transactions': outward_transactions,
@@ -130,17 +131,30 @@ def dashboard_view(request):
 #Payment request views
 
 
-# @login_required
+@login_required
 def create_payment_request(request):
     users = CustomUser.objects.all()
     if request.method == 'POST':
         form = PaymentRequestForm(request.POST)
         print(form.is_valid())
+        print(form.cleaned_data)
         if form.is_valid():
-            src_username = form.cleaned_data['recipient']
-            src_user = django.shortcuts.get_object_or_404(CustomUser, username=src_username)
+            src_username = request.user
+            # src_username = form.cleaned_data['recipient']
+            # src_user = django.shortcuts.get_object_or_404(CustomUser, username=src_username)
+            src_user = CustomUser.objects.get(username=src_username)
             payment_request = form.save(commit=False)
-            payment_request.sender = request.user.email
+            print(type(src_user))
+            payment_request.sender = src_user
+            payment_request.recipient = form.cleaned_data['recipient']
+            print(payment_request.recipient)
+            payment_request.save()
+            # sender_user = request.user.email
+            # if isinstance(sender_user, CustomUser):
+            #     payment_request.sender = sender_user
+            # else:
+            #     pass
+            # payment_request.sender = request.user.email
             print(payment_request)
             print(payment_request.sender)
             payment_request.save()
@@ -154,19 +168,57 @@ def create_payment_request(request):
 def list_pending_requests(request):
     print(request.user)
     pending_requests = PaymentRequest.objects.filter(sender=request.user, status='pending')
-    return render(request, 'transactions/list_pending_request.html', {'pending_requests': pending_requests})
+    return render(request, 'core/home.html', {'pending_requests': pending_requests})
 
 def handle_response_to_request(request, request_id):
     payment_request = PaymentRequest.objects.get(pk=request_id)
+    print(payment_request)
+    print(request.POST)
     if request.method == 'POST':
-        action = request.POST.get('action')  # 'accept' or 'reject'
+        action = request.POST.get('response')  # 'accept' or 'reject'
+        print(action)
         if action == 'accept':
             payment_request.status = 'accepted'
+
+            # form = TransactionForm(request.POST)
+            # print(form)
+            # print(form.is_valid())
+            # if form.is_valid():
+            #     src_email = request.user.email
+            src_user = django.shortcuts.get_object_or_404(CustomUser, username=payment_request.sender)
+            print(src_user)
+            dst_user = django.shortcuts.get_object_or_404(CustomUser, username=payment_request.recipient)
+            print(dst_user)
+            amount = payment_request.amount
+            if (src_user.balance > amount) and isinstance(dst_user, CustomUser):
+                converted_amount = amount
+                if src_user.currency != dst_user.currency:
+                    response =  currency_conversion_via_api(src_user, dst_user, amount)
+                    print(response)
+                print(amount)
+                #deduct from sender
+                src_user.balance = src_user.balance - amount
+                src_user.save()
+
+                print(converted_amount)
+                #increse in receiever
+                dst_user.balance = dst_user.balance + converted_amount
+                dst_user.save()
+
+                # Save the transaction
+                t = Transaction(
+                    source_user_email= CustomUser.objects.get(email=src_user.email),
+                    destination_user_email= CustomUser.objects.get(email=dst_user.email),
+                    amount=amount,
+                    currency=src_user.currency
+                )
+                t.save()
             # Process payment and update balances
             # Send notification to sender user
         elif action == 'reject':
             payment_request.status = 'rejected'
             # Send notification to sender user
         payment_request.save()
+        print(payment_request.status)
         return redirect('pending_requests')
     return render(request, 'transactions/handle_pending_request.html', {'payment_request': payment_request})
