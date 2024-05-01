@@ -136,7 +136,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script>
         function showReq(event) {
-            if (window.location.pathname === '/home/') {
+            if (window.location.pathname != '/pending-requests/') {
                 window.location.href = '/pending-requests/';
             }
             {#event.preventDefault(); // Prevent the default behavior of the link#}
@@ -149,22 +149,55 @@
            
         }
     </script>
+    {% if messages %}
+        
+{#            {% if message == 'True' %}#}
+        <script>
+            {% for message in messages %}
+                alert("{{ message }}");
+        </script>
+{#            {% endif %}#}
+        {% endfor %}
+    {% endif %}
+
+{#    {% if messages %}#}
+{#        <script>#}
+{#            {% for message in messages %}#}
+{#                alert("{{ message }}");#}
+{#            {% endfor %}#}
+{#        </script>#}
+{#    {% endif %}#}
 </head>
 <body>
 <header>
-    <p>{{ username}}</p>
+    {% if user.is_authenticated %}
+    <p>{{ user}}</p>
+    {% endif %}
+<p></p>
     <nav>
         <ul>
             <li><a href="/home/">Home</a></li>
-            <li><a href="/register/">Register</a></li>
-            <li><a href="/login/">Login</a></li>
-            <li><button class="icon-button" onclick="showReq()">
-            <a >
-                <span class="material-icons">notifications</span>
-{#                <span class="icon-button__badge">2</span>#}
-            </a>
-            </button>
-            </li>
+            {% if user.is_authenticated %}
+{#                <p>Welcome, {{ user.username }}!</p>#}
+{#                <a href="{% url 'logout' %}">Logout</a>#}
+                <li><a href="/logout/">logout</a></li>
+                <li><button class="icon-button" onclick="showReq()">
+                    <a >
+                        <span class="material-icons">notifications</span>
+                        {#                <span class="icon-button__badge">2</span>#}
+                    </a>
+                </button>
+                </li>
+            {% else %}
+                <li><a href="/register/">Register</a></li>
+                <li><a href="/login/">Login</a></li>
+{#                <p>You are not logged in.</p>#}
+{#                <a href="{% url 'login' %}">Login</a>#}
+            {% endif %}
+
+
+
+
         </ul>
     </nav>
 </header>
@@ -172,6 +205,7 @@
     {% include 'transactions/list_pending_request.html' %}
 </div>
 <div class="container" style="display: flex;height: 100vh;">
+    {% if user.is_authenticated %}
     <div class="sidebar" style="background-color: #35037a;color: #fff; width: 200px; padding: 20px;">
         <ul style="list-style-type: none; padding: 0;">
             <li style="margin-bottom: 10px;color: white;padding: 15px 0px;"><a href="/make_payment/" style="color: white;text-decoration: none"> Make Payment</a></li>
@@ -184,14 +218,20 @@
     </div>
     {#    <p>Hello </p>#}
     {#    <div class="content">{% include 'transactions/makepayment.html' %}</div>#}
-</div>
 
-<main>
-    <section>
-        <h2>{{ welcome_message }}</h2>
-        <!-- Add any other content you want to display -->
-    </section>
-</main>
+</div>
+    {% else %}
+        <div>
+            <h1>Welcome to Our Payment Service</h1>
+        <p>Note: Please log in first to make any transactions.</p>
+        </div>
+    {% endif %}
+{#<main>#}
+{#    <section>#}
+{#        <h2>{{ welcome_message }}</h2>#}
+{#        <!-- Add any other content you want to display -->#}
+{#    </section>#}
+{#</main>#}
 <footer>
     <!-- <p>This is a simple footer.</p> -->
     <p>&copy; 2024 Your Company</p>

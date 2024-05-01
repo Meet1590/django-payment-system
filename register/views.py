@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from .cutom_backend import CustomAuthBackend
+from django.contrib import messages
 
 from .models import CustomUser
 
@@ -65,7 +66,8 @@ def user_login(request):
 @csrf_exempt
 def user_logout(request):
     logout(request)
-    return redirect('home')  # Redirect to home page after logout
+    messages.success(request, "Logged out successfully!!")
+    return redirect('/home/')  # Redirect to home page after logout
 
 #home view
 @csrf_exempt

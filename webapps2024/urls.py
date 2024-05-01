@@ -26,6 +26,7 @@ urlpatterns = (
     path('admin/', admin.site.urls),
     path('register/', registerApp.register, name='register'),
     path('login/', registerApp.user_login, name='login'),
+    path('logout/', registerApp.user_logout, name='logout'),
     path('home/', registerApp.home, name='home'),
     path('make_payment/', payApp.make_payment, name='make_payment'),
     path('view_transactions/', registerApp.view_transactions, name='view_transactions'),

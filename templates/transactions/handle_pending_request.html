@@ -1,26 +1,349 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Handle Payment Request</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Header with Options</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .icon-button {
+            position: relative;
+        {#display: flex;#}
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            color: #333333;
+            background: #dddddd;
+            border: none;
+            outline: none;
+            border-radius: 50%;
+        }
+
+        .icon-button:hover {
+            cursor: pointer;
+        }
+
+        .icon-button:active {
+            background: #cccccc;
+        }
+
+        .icon-button__badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 25px;
+            height: 25px;
+            background: red;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+        }
+
+        header {
+            background-color: white;
+            box-shadow: 2px 2px 10px #35037a;
+            color: #35037a;
+            padding: 5px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed; /* Fix the header position */
+            top: 0; /* Stick it to the top */
+            width: 100%;
+        }
+
+        header ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0px 20px;
+        }
+
+        header li {
+            display: inline;
+            margin-right: 0px;
+            padding-right: 20px;
+        }
+
+        header li:last-child {
+            margin-right: 0;
+        }
+
+        header a {
+            color: #35037a;
+            text-decoration: none;
+            padding: 0px;
+            font-weight: 600;
+        }
+
+        .form_pay_to_req{
+        {#margin-top: 200px;#}
+            height: 350px;
+            width: 49%;
+            {#text-align:start;#}
+        }
+
+        .form_pay_to_req h1{
+            text-align: center;
+            color: darkblue;
+        }
+
+        .form_pay_to_req form{
+            {#text-align: start;#}
+            margin-top: 45px;
+        {#margin-left: 100px;#}
+        }
+
+        .form_pay_to_req p span{
+            font-weight: 600;
+            font-size: 18px;
+            color: darkblue;
+        }
+
+        .form_pay_to_req p{
+            {#color: darkblue;#}
+        }
+
+        #recipient{
+            padding: 10px;
+            width: 49%;
+            font-size: 15px;
+        {#margin-left: 40px;#}
+        }
+
+        footer {
+            background-color: #35037a;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .container {
+            display: flex;
+            margin-top: 40px;
+        {#height: 100vh;#}
+        }
+
+        .sidebar {
+            background-color: #35037a;
+            color: #fff;
+            width: 200px;
+            padding: 20px;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            margin-bottom: 10px;
+            color: white;
+            padding: 15px 0px;
+        }
+
+        .sidebar li a {
+            color: white;
+            text-decoration: none;
+            /* padding: 15px 0px; */
+        }
+
+        {#.content {#}
+        {#    flex: 1;#}
+        {#    padding: 20px;#}
+
+
+        .content h2 {
+            margin-bottom: 20px;
+        }
+
+    </style>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script>
+        function showReq(event) {
+            if (window.location.pathname != '/pending-requests/') {
+                window.location.href = '/pending-requests/';
+            }
+            {#event.preventDefault(); // Prevent the default behavior of the link#}
+            var element = document.getElementById("req");
+            if (element.style.display === 'none') {
+                element.style.display = 'block';
+            } else {
+                element.style.display = 'none';
+            }
+
+        }
+    </script>
 </head>
 <body>
-<h1>Handle Payment Request</h1>
-<p>Request ID: {{ payment_request.id }}</p>
-<p>From: {{ payment_request.sender.email }}</p>
-<p>To: {{ payment_request.recipient.email }}</p>
-<p>Amount: {{ payment_request.amount }}</p>
-<p>Status: {{ payment_request.status }}</p>
-<form method="post">
-    {% csrf_token %}
-    <input type="hidden" name="request_id" value="{{ request_id }}">
-    <label for="response">Response:</label>
-    <select name="response" id="response" required>
-        <option value="accept"  >Accept</option>
-        <option value="reject" >Reject</option>
-    </select>
-    <br>
-    <button type="submit">Submit Response</button>
-</form>
+<header>
+    <p>{{ user}}</p>
+    <nav>
+        <ul>
+            <li><a href="/home/">Home</a></li>
+            {#            <li><a href="/register/">Register</a></li>#}
+            {#            <li><a href="/login/">Login</a></li>#}
+            {#            <li><button class="icon-button" onclick="showReq()">#}
+            {#                <a href="/pending-requests/" >#}
+            {#                    <span class="material-icons" >notifications</span>#}
+            {#                <span class="icon-button__badge">2</span>#}
+            {#                </a>#}
+            {#            </button>#}
+            {#            </li>#}
+            {% if user.is_authenticated %}
+                {#                <p>Welcome, {{ user.username }}!</p>#}
+                {#                <a href="{% url 'logout' %}">Logout</a>#}
+                <li><a href="/logout/">logout</a></li>
+                <li><button class="icon-button" onclick="showReq()">
+                    <a >
+                        <span class="material-icons">notifications</span>
+                        {#                <span class="icon-button__badge">2</span>#}
+                    </a>
+                </button>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+</header>
+<div id="req" style="display: none">
+    {% include 'transactions/list_pending_request.html' %}
+</div>
+<div class="container" style="display: flex; height: 100vh">
+    <div
+            class="sidebar"
+            style="
+					background-color: #35037a;
+					color: #fff;
+					width: 200px;
+					padding: 20px;
+				"
+    >
+        <ul style="list-style-type: none; padding: 0">
+            <li style="margin-bottom: 10px; color: white; padding: 15px 0px">
+                <a
+                        href="/make_payment/"
+                        style="color: white; text-decoration: none"
+                >
+                    Make Payment</a
+                >
+            </li>
+            <li style="margin-bottom: 10px; color: white; padding: 15px 0">
+                <a
+                        href="/create-payment-request/"
+                        style="color: white; text-decoration: none"
+                >Make Payment Request</a
+                >
+            </li>
+            <li style="margin-bottom: 10px; color: white; padding: 15px 0px">
+                <a
+                        href="/view_user_transactions/"
+                        style="color: white; text-decoration: none"
+                >Show All Transactions</a
+                >
+            </li>
+        </ul>
+    </div>
+
+    <!-- make_payment_request.html -->
+
+    <div
+            class="form_pay_to_req"
+            style="
+                    {#max-width: 400px;#}
+                    margin: 100px auto;
+                    padding: 20px 5px;
+                    border: 3px solid #ccc;
+                    border-radius: 5px;
+                    background-color: #f3f3fb;
+                    "
+    >
+        <h1>Handle Payment Request</h1>
+        <div style="display: flex; justify-content: space-around">
+            <div>
+        <p> <span>Request ID: </span>{{ payment_request.id }}</p>
+        <p><span>From:</span> {{ payment_request.sender.email }}</p>
+                <p><span>Status: </span>{{ payment_request.status }}</p>
+            </div>
+            <div>
+
+        <p><span>Amount:</span> {{ payment_request.amount }}</p>
+                <p><span>To:</span> {{ payment_request.recipient.email }}</p>
+            </div>
+
+        </div>
+
+        <div style="width: 70%; margin: 0px auto; ">
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="request_id" value="{{ request_id }}" >
+            <div class="styled-select">
+            <label for="response" style="color: darkblue; font-weight: 600; padding-right: 10px">Response:</label>
+
+            <select name="response" id="response" required style="padding: 5px 15px; font-size: 16px; border: none; outline: none; width: 55%">
+                <option value="accept" style="border-radius: none" >Accept</option>
+                <option value="reject" >Reject</option>
+            </select>
+            </div>
+            <br>
+            <div style="text-align: start; width: 60%">
+            <button type="submit" style="padding: 5px 15px; background-color:white; color: darkblue;border:1px solid darkblue; font-size: 17px; font-weight: 600; margin: 10px 0px">Submit Response</button>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+<footer>
+    <!-- <p>This is a simple footer.</p> -->
+    <p>&copy; 2024 Your Company</p>
+</footer>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <title>Handle Payment Request</title>#}
+{#</head>#}
+{#<body>#}
+{#<h1>Handle Payment Request</h1>#}
+{#<p>Request ID: {{ payment_request.id }}</p>#}
+{#<p>From: {{ payment_request.sender.email }}</p>#}
+{#<p>To: {{ payment_request.recipient.email }}</p>#}
+{#<p>Amount: {{ payment_request.amount }}</p>#}
+{#<p>Status: {{ payment_request.status }}</p>#}
+{#<form method="post">#}
+{#    {% csrf_token %}#}
+{#    <input type="hidden" name="request_id" value="{{ request_id }}">#}
+{#    <label for="response">Response:</label>#}
+{#    <select name="response" id="response" required>#}
+{#        <option value="accept"  >Accept</option>#}
+{#        <option value="reject" >Reject</option>#}
+{#    </select>#}
+{#    <br>#}
+{#    <button type="submit">Submit Response</button>#}
+{#</form>#}
+{#</body>#}
+{#</html>#}

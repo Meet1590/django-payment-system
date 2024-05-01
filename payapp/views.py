@@ -9,7 +9,7 @@ from register.models import CustomUser
 from .forms import TransactionForm, PaymentRequestForm
 from .models import Transaction, PaymentRequest
 from .transaction_utils import currency_conversion_via_api
-
+from django.db.models import Q
 
 @csrf_exempt
 @login_required
@@ -167,8 +167,9 @@ def create_payment_request(request):
 
 def list_pending_requests(request):
     print(request.user)
-    pending_requests = PaymentRequest.objects.filter(sender=request.user, status='pending')
+    pending_requests = PaymentRequest.objects.filter(sender=request.user ,status='pending')
     return render(request, 'core/home.html', {'pending_requests': pending_requests})
+
 
 def handle_response_to_request(request, request_id):
     payment_request = PaymentRequest.objects.get(pk=request_id)
@@ -219,6 +220,7 @@ def handle_response_to_request(request, request_id):
             payment_request.status = 'rejected'
             # Send notification to sender user
         payment_request.save()
+        messages.success(request, "Payment request has been rejected!!")
         print(payment_request.status)
         return redirect('pending_requests')
     return render(request, 'transactions/handle_pending_request.html', {'payment_request': payment_request})
