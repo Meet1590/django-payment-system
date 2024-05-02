@@ -161,9 +161,13 @@
     <p>{{ username}}</p>
     <nav>
         <ul>
+            {%if request.user.is_authenticated %}
+                <li><a href="/logout/">Logout</a></li>
+            {% else %}
+                <li><a href="/register/">Register</a></li>
+                <li><a href="/login/">Login</a></li>
+            {% endif %}
             <li><a href="/home/">Home</a></li>
-            <li><a href="/register/">Register</a></li>
-            <li><a href="/login/">Login</a></li>
             <li><button class="icon-button" onclick="showReq()">
                 <a href="/pending-requests/" >
                     <span class="material-icons" >notifications</span>
@@ -210,12 +214,19 @@
                 >Show All Transactions</a
                 >
             </li>
+            <li style="margin-bottom: 10px; color: white; padding: 15px 0px">
+                <a
+                        href="/pending-requests/"   
+                        style="color: white; text-decoration: none"
+                >Payment Resquest</a
+                >
+            </li>
         </ul>
     </div>
     <div style="width: 100%; text-align: center">
         <h1 style="text-align: center; color: #35037a">View Transactions</h1>
-        <h2 style="text-decoration: underline; color: #35037a">Recent Transactions</h2>
-        <h2 style=" font-size: 25px; color: #35037a">{{ username }}</h2>
+        <h2 style="text-decoration: underline; color: #35037a">Recent Transactions</h2> 
+        <h2 style=" font-size: 25px; color: #35037a">{{request.user.balance}}</h2>
         <div style="display: flex; width: 100%">
             <div class="inward_tran">
                 <h4 style="color: #35037a">Inward transaction list</h4>

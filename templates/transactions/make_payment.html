@@ -1,6 +1,6 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -14,7 +14,12 @@
 
         .icon-button {
             position: relative;
-        {#display: flex;#}
+
+                {
+                #display: flex;
+                #
+            }
+
             align-items: center;
             justify-content: center;
             width: 50px;
@@ -56,8 +61,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: fixed; /* Fix the header position */
-            top: 0; /* Stick it to the top */
+            position: fixed;
+            /* Fix the header position */
+            top: 0;
+            /* Stick it to the top */
             width: 100%;
         }
 
@@ -97,7 +104,11 @@
         .container {
             display: flex;
             margin-top: 40px;
-            {#height: 100vh;#}
+
+                {
+                #height: 100vh;
+                #
+            }
         }
 
         .sidebar {
@@ -124,151 +135,149 @@
             /* padding: 15px 0px; */
         }
 
-        {#.content {#}
-        {#    flex: 1;#}
-        {#    padding: 20px;#}
-        
+            {
+            #.content {
+                #
+            }
 
-        .content h2 {
-            margin-bottom: 20px;
-        }
+                {
+                # flex: 1;
+                #
+            }
+
+                {
+                # padding: 20px;
+                #
+            }
+
+
+            .content h2 {
+                margin-bottom: 20px;
+            }
     </style>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script>
         function showReq(event) {
-            {#event.preventDefault(); // Prevent the default behavior of the link#}
-            var element = document.getElementById("req");
-            if (element.style.display === 'none') {
-                element.style.display = 'block';
-            } else {
-                element.style.display = 'none';
+            {
+                #event.preventDefault(); // Prevent the default behavior of the link#}
+                var element = document.getElementById("req");
+                if (element.style.display === 'none') {
+                    element.style.display = 'block';
+                } else {
+                    element.style.display = 'none';
+                }
             }
-        }
     </script>
 </head>
-<body>
-<header>
-    <p>{{ username }}</p>
-    <nav>
-        <ul>
-            <li><a href="/home/">Home</a></li>
-            <li><a href="/register/">Register</a></li>
-            <li><a href="/login/">Login</a></li>
-            <li><button class="icon-button" onclick="showReq()">
-                <a href="/pending-requests/" >
-                    <span class="material-icons" >notifications</span>
-                    {#                <span class="icon-button__badge">2</span>#}
-                </a>
-            </button>
-            </li>
-        </ul>
-    </nav>
-</header>
-<div id="req" style="display: none">
-    {% include 'transactions/list_pending_request.html' %}
-</div>
-<div class="container" style="display: flex;height: 100vh;">
-    <div class="sidebar" style="background-color: #35037a;color: #fff; width: 200px; padding: 20px;">
-        <ul style="list-style-type: none; padding: 0;">
-            <li style="margin-bottom: 10px;color: white;padding: 15px 0px;"><a href="/make_payment/" style="color: white;text-decoration: none"> Make Payment</a></li>
-            <li style="margin-bottom: 10px;color: white;padding: 15px 0;"><a href="/create-payment-request/" style="color: white;text-decoration: none">Make Payment Request</a></li>
-            <li style="margin-bottom: 10px;color: white;padding: 15px 0px;"><a href="/view_user_transactions/" style="color: white;text-decoration: none">Show All Transactions</a></li>
-        </ul>
-    </div>
-    {#    <p>Hello </p>#}
-    {#    <div class="content">{% include 'transactions/makepayment.html' %}</div>#}
 
-    <div
-            style="
+<body>
+    <header>
+        <p>{{request.user.username}}</p>
+        <nav>
+            <ul>
+                {% if request.user.is_authenticated %}
+                <li><a href="/logout/">Logout</a></li>
+                {% else %}
+                <li><a href="/register/">Register</a></li>
+                <li><a href="/login/">Login</a></li>
+                {% endif %}
+                <li><a href="/home/">Home</a></li>
+                <li><button class="icon-button" onclick="showReq()">
+                        <a href="/pending-requests/">
+                            <span class="material-icons">notifications</span>
+                            {# <span class="icon-button__badge">2</span>#}
+                        </a>
+                    </button>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <div id="req" style="display: none">
+        {% include 'transactions/list_pending_request.html' %}
+    </div>
+    <div class="container" style="display: flex;height: 100vh;">
+        <div class="sidebar" style="background-color: #35037a;color: #fff; width: 200px; padding: 20px;">
+            <ul style="list-style-type: none; padding: 0;">
+                <li style="margin-bottom: 10px;color: white;padding: 15px 0px;"><a href="/make_payment/"
+                        style="color: white;text-decoration: none"> Make Payment</a></li>
+                <li style="margin-bottom: 10px;color: white;padding: 15px 0;"><a href="/create-payment-request/"
+                        style="color: white;text-decoration: none">Make Payment Request</a></li>
+                <li style="margin-bottom: 10px;color: white;padding: 15px 0px;"><a href="/view_user_transactions/"
+                        style="color: white;text-decoration: none">Show All Transactions</a></li>
+            </ul>
+        </div>
+        {# <p>Hello </p>#}
+        {# <div class="content">{% include 'transactions/makepayment.html' %}</div>#}
+
+        <div style="
 					max-width: 400px;
 					margin: 20px auto;
 					padding: 20px;
 					border: 1px solid #ccc;
 					border-radius: 5px;
 					background-color: #f9f9f9;
-				"
-    >
-        <h2>Make Payment</h2>
-        <form action="/make_payment/" method="post">
-            <div style="margin-bottom: 20px">
-                <label for="account" style="font-weight: bold">From Account:</label>
-                <span id="account">Account 1</span>
-            </div>
-            <div style="margin-bottom: 20px">
-                <label for="destination_user_email" style="font-weight: bold"
-                >Recipient Email:</label
-                >
-                <input
-                        type="email"
-                        id="destination_user_email"
-                        name="destination_user_email"
-                        required
-                        style="
+				">
+            <h2>Make Payment</h2>
+            <form action="/make_payment/" method="post">
+                <div style="margin-bottom: 20px">
+                    <label for="account" style="font-weight: bold">Available Balance</label>
+                    <span id="account">{{request.user.balance}}</span>
+                </div>
+                <div style="margin-bottom: 20px">
+                    <label for="account" style="font-weight: bold">From Account:</label>
+                    <span id="account">Account 1</span>
+                </div>
+                <div style="margin-bottom: 20px">
+                    <label for="destination_user_email" style="font-weight: bold">Recipient Email:</label>
+                    <input type="email" id="destination_user_email" name="destination_user_email" required style="
 								width: 100%;
 								padding: 8px;
 								border: 1px solid #ccc;
 								border-radius: 5px;
 								box-sizing: border-box;
-							"
-                />
-            </div>
-            <div style="margin-bottom: 20px">
-                <label for="amount" style="font-weight: bold">Amount:</label>
-                <input
-                        type="number"
-                        id="amount"
-                        name="amount"
-                        min="0"
-                        step="0.01"
-                        required
-                        style="
+							" />
+                </div>
+                <div style="margin-bottom: 20px">
+                    <label for="amount" style="font-weight: bold">Amount:</label>
+                    <input type="number" id="amount" name="amount" min="0" step="0.01" required style="
 								width: 100%;
 								padding: 8px;
 								border: 1px solid #ccc;
 								border-radius: 5px;
 								box-sizing: border-box;
-							"
-                />
-            </div>
-            <div style="margin-bottom: 20px">
-                <label for="reference" style="font-weight: bold"
-                >Description:</label>
-                <input
-                        type="text"
-                        id="reference"
-                        name="reference"
-                        style="
+							" />
+                </div>
+                <div style="margin-bottom: 20px">
+                    <label for="reference" style="font-weight: bold">Description:</label>
+                    <input type="text" id="reference" name="reference" style="
 								width: 100%;
 								padding: 8px;
 								border: 1px solid #ccc;
 								border-radius: 5px;
 								box-sizing: border-box;
-							"
-                />
-            </div>
-            <div style="margin-bottom: 20px">
-                <button
-                        type="submit"
-                        style="
+							" />
+                </div>
+                <div style="margin-bottom: 20px">
+                    <button type="submit" style="
 								padding: 10px 20px;
 								background-color: #007bff;
 								color: #fff;
 								border: none;
 								border-radius: 5px;
 								cursor: pointer;
-							"
-                >
-                    Make Payment
-                </button>
-            </div>
-        </form>
+							">
+                        Make Payment
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
-</div>
+    </div>
 
-<footer>
-    <!-- <p>This is a simple footer.</p> -->
-    <p>&copy; 2024 Your Company</p>
-</footer>
+    <footer>
+        <!-- <p>This is a simple footer.</p> -->
+        <p>&copy; 2024 Your Company</p>
+    </footer>
 </body>
+
 </html>

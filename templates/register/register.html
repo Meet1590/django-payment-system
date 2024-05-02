@@ -132,9 +132,16 @@
     </nav>
 </header>
 <div class="container">
-    {%  csrf_token %}
     <h2>Registration Form</h2>
-    <form method="post">
+    <form action="/register/" method="post">
+        {% csrf_token %}
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
         <div class="form-group">
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required />
@@ -169,6 +176,12 @@
         </div>
         <div class="form-group">
             <button type="submit">Register</button>
+        </div>
+        <div class="form-group">
+            Already Registered.
+            <a class="" href="{% url 'login' %}">
+                Login
+            </a>
         </div>
     </form>
 </div>

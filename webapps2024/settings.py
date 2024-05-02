@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'register.apps.RegisterConfig',
-    'payapp.apps.PayappConfig'
+    'payapp.apps.PayappConfig',
+    'django_extensions'
     ]
 
 AUTHENTICATION_BACKENDS = [
@@ -57,7 +58,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
 ROOT_URLCONF = 'webapps2024.urls'
 
 AUTH_USER_MODEL = 'register.CustomUser'  # added manually

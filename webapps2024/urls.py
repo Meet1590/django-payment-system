@@ -29,9 +29,10 @@ urlpatterns = (
     path('home/', registerApp.home, name='home'),
     path('make_payment/', payApp.make_payment, name='make_payment'),
     path('view_transactions/', registerApp.view_transactions, name='view_transactions'),
-    path('convert_currency/', currencyConverterApp.convert_currency, name='convert_currency'),
+    path('convert_currency/<str:currency1>/<str:currency2>/<int:amount>/', currencyConverterApp.convert_currency, name='convert_currency'),
     path('view_user_transactions/', payApp.view_user_transactions, name='view_user_transactions'),
     path('create-payment-request/', payApp.create_payment_request, name='create_payment_request'),
     path('pending-requests/', payApp.list_pending_requests, name='pending_requests'),
     path('handle-response/<int:request_id>/', payApp.handle_response_to_request, name='handle_response_to_request'),
+    path('logout/',registerApp.user_logout , name='logout')
 )

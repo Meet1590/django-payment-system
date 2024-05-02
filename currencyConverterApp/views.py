@@ -4,18 +4,19 @@ from django.http import HttpResponse, JsonResponse
 import json
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.views import APIView
 
 # Create your views here.
-@api_view(['Post'])
-def convert_currency(request):
+@api_view(['GET'])
+def convert_currency(request, currency1, currency2, amount):
     try:
-        if request.method == 'POST':
+        if request.method == 'GET':
             #only json data is accepted at this api
-            data = json.loads(request.body)   # Get the data from the request object
+            # data = json.loads(request.body)   # Get the data from the request object
 
-            source_currency = data.get('source_currency')
-            destination_currency = data.get('destination_currency')
-            amount = data.get('amount')
+            source_currency = currency1
+            destination_currency = currency2
             amount = int(amount)
             '''
             print(request)
@@ -44,8 +45,13 @@ def convert_currency(request):
                     'amount': amount,
                     'converted_amount': converted_amount
                 }
+                return Response({"status_code": status.HTTP_200_OK, 'message': 'Currency Conversion successfully.', 'data': res}, status=status.HTTP_200_OK)
             else:
-                res = {'error': 'Conversion not available for provided currencies'}
-            return JsonResponse(res) #json response
+                # res = {'error': 'Conversion not available for provided currencies'}
+                return Response({"status_code": status.HTTP_406_NOT_ACCEPTABLE, 'message': 'Conversion not available for provided currencies.', 'data': {}}, status=status.HTTP_406_NOT_ACCEPTABLE) #json response
     except Exception as e:
-        return JsonResponse({'error': 'Invalid data format provided! API only accepts JSON data'})
+        return Response({"status_code": status.HTTP_500_INTERNAL_SERVER_ERROR, 'message': str(e), 'data': res}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+    
+

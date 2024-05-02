@@ -8,6 +8,8 @@ class Transaction(models.Model):
     destination_user_email = models.ForeignKey(CustomUser, related_name='received_transactions',
                                                on_delete=models.CASCADE, to_field='email')
     amount = models.IntegerField()
+    inward_amount = models.DecimalField(max_digits=10, decimal_places=2 , null= True)
+    outward_amount = models.DecimalField(max_digits=10, decimal_places=2 , null= True)
     reference = models.CharField(max_length=50)
     currency_choices = [
         ('GBP', 'British Pound'),

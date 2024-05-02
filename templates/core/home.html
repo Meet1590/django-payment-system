@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -13,7 +14,12 @@
 
         .icon-button {
             position: relative;
-            {#display: flex;#}
+
+                {
+                #display: flex;
+                #
+            }
+
             align-items: center;
             justify-content: center;
             width: 50px;
@@ -56,8 +62,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: fixed; /* Fix the header position */
-            top: 0; /* Stick it to the top */
+            position: fixed;
+            /* Fix the header position */
+            top: 0;
+            /* Stick it to the top */
             width: 100%;
         }
 
@@ -97,7 +105,11 @@
         .container {
             display: flex;
             margin-top: 50px;
-        {#height: 100vh;#}
+
+                {
+                #height: 100vh;
+                #
+            }
         }
 
         .sidebar {
@@ -124,14 +136,25 @@
             /* padding: 15px 0px; */
         }
 
-        {#.content {#}
-        {#    flex: 1;#}
-        {#    padding: 20px;#}
+            {
+            #.content {
+                #
+            }
+
+                {
+                # flex: 1;
+                #
+            }
+
+                {
+                # padding: 20px;
+                #
+            }
 
 
-        .content h2 {
-            margin-bottom: 20px;
-        }
+            .content h2 {
+                margin-bottom: 20px;
+            }
     </style>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script>
@@ -139,63 +162,73 @@
             if (window.location.pathname === '/home/') {
                 window.location.href = '/pending-requests/';
             }
-            {#event.preventDefault(); // Prevent the default behavior of the link#}
-             var element = document.getElementById("req");
+            {
+                #event.preventDefault(); // Prevent the default behavior of the link#}
+                var element = document.getElementById("req");
                 if (element.style.display === 'none') {
                     element.style.display = 'block';
                 } else {
                     element.style.display = 'none';
                 }
-           
-        }
+
+            }
     </script>
 </head>
-<body>
-<header>
-    <p>{{ username}}</p>
-    <nav>
-        <ul>
-            <li><a href="/home/">Home</a></li>
-            <li><a href="/register/">Register</a></li>
-            <li><a href="/login/">Login</a></li>
-            <li><button class="icon-button" onclick="showReq()">
-            <a >
-                <span class="material-icons">notifications</span>
-{#                <span class="icon-button__badge">2</span>#}
-            </a>
-            </button>
-            </li>
-        </ul>
-    </nav>
-</header>
-<div id="req" style="display: none">
-    {% include 'transactions/list_pending_request.html' %}
-</div>
-<div class="container" style="display: flex;height: 100vh;">
-    <div class="sidebar" style="background-color: #35037a;color: #fff; width: 200px; padding: 20px;">
-        <ul style="list-style-type: none; padding: 0;">
-            <li style="margin-bottom: 10px;color: white;padding: 15px 0px;"><a href="/make_payment/" style="color: white;text-decoration: none"> Make Payment</a></li>
-            <li style="margin-bottom: 10px;color: white;padding: 15px 0;"><a href="/create-payment-request/" style="color: white;text-decoration: none">Make Payment Request</a></li>
-            <li style="margin-bottom: 10px;color: white;padding: 15px 0px;"><a href="/view_user_transactions/" style="color: white;text-decoration: none">Show All Transactions</a></li>
-        </ul>
-    </div>
-    <div>
-        <h1>Welcome to Our Payment Service</h1>
-    </div>
-    {#    <p>Hello </p>#}
-    {#    <div class="content">{% include 'transactions/makepayment.html' %}</div>#}
-</div>
 
-<main>
-    <section>
-        <h2>{{ welcome_message }}</h2>
-        <!-- Add any other content you want to display -->
-    </section>
-</main>
-<footer>
-    <!-- <p>This is a simple footer.</p> -->
-    <p>&copy; 2024 Your Company</p>
-</footer>
+<body>
+    <header>
+        <p>{{request.user.username}}</p>
+        <nav>
+            <ul>
+                {% if request.user.is_authenticated %}
+                <li><a href="/logout/">Logout</a></li>
+                {% else %}
+                <li><a href="/register/">Register</a></li>
+                <li><a href="/login/">Login</a></li>
+                {% endif %}
+                <li><a href="/home/">Home</a></li>
+                <li><button class="icon-button" onclick="showReq()">
+                        <a>
+                            <span class="material-icons">notifications</span>
+                            {# <span class="icon-button__badge">2</span>#}
+                        </a>
+                    </button>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <div id="req" style="display: none">
+        {% include 'transactions/list_pending_request.html' %}
+    </div>
+    <div class="container" style="display: flex;height: 100vh;">
+        <div class="sidebar" style="background-color: #35037a;color: #fff; width: 200px; padding: 20px;">
+            <ul style="list-style-type: none; padding: 0;">
+                <li style="margin-bottom: 10px;color: white;padding: 15px 0px;"><a href="/make_payment/"
+                        style="color: white;text-decoration: none"> Make Payment</a></li>
+                <li style="margin-bottom: 10px;color: white;padding: 15px 0;"><a href="/create-payment-request/"
+                        style="color: white;text-decoration: none">Make Payment Request</a></li>
+                <li style="margin-bottom: 10px;color: white;padding: 15px 0px;"><a href="/view_user_transactions/"
+                        style="color: white;text-decoration: none">Show All Transactions</a></li>
+            </ul>
+        </div>
+        <div>
+            <h1>Welcome to Our Payment Service</h1>
+        </div>
+        {# <p>Hello </p>#}
+        {# <div class="content">{% include 'transactions/makepayment.html' %}</div>#}
+    </div>
+
+    <main>
+        <section>
+            <h2>{{ welcome_message }}</h2>
+            <!-- Add any other content you want to display -->
+        </section>
+    </main>
+    <footer>
+        <!-- <p>This is a simple footer.</p> -->
+        <p>&copy; 2024 Your Company</p>
+    </footer>
 
 </body>
+
 </html>

@@ -9,6 +9,7 @@ from register.models import CustomUser
 from .forms import TransactionForm, PaymentRequestForm
 from .models import Transaction, PaymentRequest
 from .transaction_utils import currency_conversion_via_api
+from decimal import Decimal
 
 
 @csrf_exempt
@@ -17,8 +18,8 @@ from .transaction_utils import currency_conversion_via_api
 def make_payment(request):
     if request.method == 'POST':
         form = TransactionForm(request.POST)
-        print(form)
-        print(form.is_valid())
+        # print(form)
+        # print(form.is_valid())
         if form.is_valid():
             src_email = request.user.email
             src_user = django.shortcuts.get_object_or_404(CustomUser, email=src_email)
@@ -30,18 +31,27 @@ def make_payment(request):
 
                 converted_amount = amount
                 if src_user.currency != dst_user.currency:
-                    response =  currency_conversion_via_api(src_user, dst_user, amount)
-                    print(response)
-                print(amount)
+                    print("==-=-=-==-------- currency is not same =========>")
+                    response =  currency_conversion_via_api(src_user.currency, dst_user.currency, amount)
+                    print("response ==============>",response)
+                    amount = response['amount']
+                    converted_amount = response['converted_amount']
+                    converted_amount_decimal = Decimal(converted_amount)
+                    converted_amount = converted_amount_decimal
+                # print(amount)
                 #deduct from sender
+                # amount = response['amount']
+                # converted_amount = response['converted_amount']
+                # converted_amount_decimal = Decimal(converted_amount)
+
                 src_user.balance = src_user.balance - amount
                 src_user.save()
 
-                print(converted_amount)
+                # print(converted_amount)
                 #increse in receiever
                 dst_user.balance = dst_user.balance + converted_amount
                 dst_user.save()
-
+                # print("converted_amount_decimal  =--=-==-=-=-=->", converted_amount_decimal)
                 # Save the transaction
                 t = Transaction(
                     source_user_email=src_user,
@@ -70,7 +80,6 @@ def make_payment(request):
 def show_balance(request):
     # Add logic to retrieve and display balance information
     return render(request, 'core/view_transaction.html', {})
-
 
 @csrf_exempt
 @login_required
@@ -160,15 +169,15 @@ def create_payment_request(request):
             payment_request.save()
             # Send notification to recipient user
             messages.success(request, 'Payment request sent successfully!')
-            return redirect('pending_requests')
+            return redirect('create_payment_request')
     else:
         form = PaymentRequestForm()
     return render(request, 'transactions/create_payment_request.html', {'form': form, 'users': users})
 
 def list_pending_requests(request):
     print(request.user)
-    pending_requests = PaymentRequest.objects.filter(sender=request.user, status='pending')
-    return render(request, 'core/home.html', {'pending_requests': pending_requests})
+    pending_requests = PaymentRequest.objects.filter(recipient=request.user, status='pending')
+    return render(request, 'transactions/list_pending_request.html', {'pending_requests': pending_requests})
 
 def handle_response_to_request(request, request_id):
     payment_request = PaymentRequest.objects.get(pk=request_id)
@@ -185,18 +194,24 @@ def handle_response_to_request(request, request_id):
             # print(form.is_valid())
             # if form.is_valid():
             #     src_email = request.user.email
-            src_user = django.shortcuts.get_object_or_404(CustomUser, username=payment_request.sender)
-            print(src_user)
-            dst_user = django.shortcuts.get_object_or_404(CustomUser, username=payment_request.recipient)
-            print(dst_user)
+            src_user = django.shortcuts.get_object_or_404(CustomUser, username=payment_request.recipient)
+            print("src_user  ============>",src_user)
+            dst_user = django.shortcuts.get_object_or_404(CustomUser, username=payment_request.sender)
+            print("dst_user  ===================>",dst_user)
             amount = payment_request.amount
             if (src_user.balance > amount) and isinstance(dst_user, CustomUser):
                 converted_amount = amount
                 if src_user.currency != dst_user.currency:
-                    response =  currency_conversion_via_api(src_user, dst_user, amount)
+                    response =  currency_conversion_via_api(src_user.currency, dst_user.currency, amount)
                     print(response)
+                    amount = response['amount']
+                    converted_amount = response['converted_amount']
+                    converted_amount_decimal = Decimal(converted_amount)
+                    converted_amount = converted_amount_decimal
                 print(amount)
                 #deduct from sender
+               
+
                 src_user.balance = src_user.balance - amount
                 src_user.save()
 
