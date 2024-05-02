@@ -227,7 +227,9 @@
                             <p style="display: inline-block;padding: 10px;"><span style=" font-weight: 600;">To:</span> {{ request.recipient.email }}</p>
                             <p style="display: inline-block;padding: 10px;"><span style=" font-weight: 600;">Amount:</span> {{ request.amount }}</p>
                             <p style="display: inline-block;padding: 10px;"><span style=" font-weight: 600;">Status:</span> {{ request.status }}</p>
-                            <p style="display: inline-block;padding: 10px;"> <a href="{% url 'handle_response_to_request' request.id %}">Respond to Request</a></p>
+                            {% if request.status == 'pending' %}
+                                <p style="display: inline-block;padding: 10px;"> <a href="{% url 'handle_response_to_request' request.id %}">Respond to Request</a></p>
+                            {% endif %}
                         </li>
                     {% endfor %}
                 </ul>
