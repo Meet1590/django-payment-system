@@ -29,7 +29,7 @@ def make_payment(request):
             amount = form.cleaned_data["amount"]
             if dst_user == src_user:
                 return render(request , 'transactions/make_payment.html' , {"msg":"You can't payment yourself "})
-            if not CustomUser.objects.filter(email = dst_email).exists():
+            if not CustomUser.objects.filter(email = dst_user.email).exists():
                 return render(request , 'transactions/make_payment.html' , {"msg":"Please ensure user is registerd with us"})
             if (src_user.balance > amount) and isinstance(dst_user, CustomUser):
 
