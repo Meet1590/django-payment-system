@@ -169,21 +169,21 @@
 
     </style>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <script>
-        function showReq(event) {
-            if (window.location.pathname != '/pending-requests/') {
-                window.location.href = '/pending-requests/';
-            }
+{#    <script>#}
+{#        function showReq(event) {#}
+{#            if (window.location.pathname != '/pending-requests/') {#}
+{#                window.location.href = '/pending-requests/';#}
+{#            }#}
             {#event.preventDefault(); // Prevent the default behavior of the link#}
-            var element = document.getElementById("req");
-            if (element.style.display === 'none') {
-                element.style.display = 'block';
-            } else {
-                element.style.display = 'none';
-            }
-
-        }
-    </script>
+{#            var element = document.getElementById("req");#}
+{#            if (element.style.display === 'none') {#}
+{#                element.style.display = 'block';#}
+{#            } else {#}
+{#                element.style.display = 'none';#}
+{#            }#}
+{##}
+{#        }#}
+{#    </script>#}
 </head>
 <body>
 <header>
@@ -204,20 +204,20 @@
                 {#                <p>Welcome, {{ user.username }}!</p>#}
                 {#                <a href="{% url 'logout' %}">Logout</a>#}
                 <li><a href="/logout/">logout</a></li>
-                <li><button class="icon-button" onclick="showReq()">
-                    <a >
-                        <span class="material-icons">notifications</span>
+{#                <li><button class="icon-button" onclick="showReq()">#}
+{#                    <a >#}
+{#                        <span class="material-icons">notifications</span>#}
                         {#                <span class="icon-button__badge">2</span>#}
-                    </a>
-                </button>
-                </li>
+{#                    </a>#}
+{#                </button>#}
+{#                </li>#}
             {% endif %}
         </ul>
     </nav>
 </header>
-<div id="req" style="display: none">
-    {% include 'transactions/list_pending_request.html' %}
-</div>
+{#<div id="req" style="display: none">#}
+{#    {% include 'transactions/list_pending_request.html' %}#}
+{#</div>#}
 <div class="container" style="display: flex; height: 100vh">
     <div
             class="sidebar"
@@ -251,6 +251,8 @@
                 >Show All Transactions</a
                 >
             </li>
+            <li style="margin-bottom: 10px;color: white;padding: 15px 0px;"><a href="/pending-requests/" style="color: white;text-decoration: none">Pending Requests</a></li>
+            
         </ul>
     </div>
 
