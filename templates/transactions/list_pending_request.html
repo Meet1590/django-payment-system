@@ -1,20 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
 
-<div style="position: absolute; top:90px; right: 30px">
-{#<h1>Pending Payment Requests</h1>#}
-{% if pending_requests %}
-    <ul class="payment_req_list" style="margin: 0px;padding: 0px; width:980px;border: 2px solid darkblue;">
-        {% for request in pending_requests %}
-            <li style="list-style: none;background-color: white; color: black;border-bottom: 1px solid darkblue;">
-                <p style="display: inline-block;padding: 10px;"><span style=" font-weight: 600;">Request ID:</span> {{ request.id }}</p>
-                <p style="display: inline-block;padding: 10px;"><span style=" font-weight: 600;">From:</span> {{ request.sender.email }}</p>
-                <p style="display: inline-block;padding: 10px;"><span style=" font-weight: 600;">To:</span> {{ request.recipient.email }}</p>
-                <p style="display: inline-block;padding: 10px;"><span style=" font-weight: 600;">Amount:</span> {{ request.amount }}</p>
-                <p style="display: inline-block;padding: 10px;"><span style=" font-weight: 600;">Status:</span> {{ request.status }}</p>
-               <p style="display: inline-block;padding: 10px;"> <a href="{% url 'handle_response_to_request' request.id %}">Respond to Request</a></p>
-            </li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>No pending payment requests.</p>
-{% endif %}
-</div>
+
+        .icon-button {
+            position: relative;
+        {#display: flex;#}
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            color: #333333;
+            background: #dddddd;
+            border: none;
+            outline: none;
+            border-radius: 50%;
+        }
+
+        .icon-button:hover {
+            cursor: pointer;
+        }
+
+        .icon-button:active {
+            background: #cccccc;
+        }
+
+        .icon-button__badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 25px;
+            height: 25px;
+            background: red;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+        }
+
+
+        header {
+            background-color: white;
+            box-shadow: 2px 2px 10px #35037a;
+            color: #35037a;
+            padding: 7px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed; /* Fix the header position */
+            top: 0; /* Stick it to the top */
+            width: 100%;
+        }
+
+        header ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0px 20px;
+        }
+
+        header li {
+            display: inline;
+            margin-right: 0px;
+            padding-right: 20px;
+        }
+
+        header li:last-child {
+            margin-right: 0;
+        }
+
+        header a {
+            color: #35037a;
+            text-decoration: none;
+            padding: 0px;
+            font-weight: 600;
+        }
+
+        footer {
+            background-color: #35037a;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .container {
+            display: flex;
+            margin-top: 50px;
+        {#height: 100vh;#}
+        }
+
+        .sidebar {
+            background-color: #35037a;
+            color: #fff;
+            width: 200px;
+            padding: 20px;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            margin-bottom: 10px;
+            color: white;
+            padding: 15px 0px;
+        }
+
+        .sidebar li a {
+            color: white;
+            text-decoration: none;
+            /* padding: 15px 0px; */
+        }
+
+        {#.content {#}
+        {#    flex: 1;#}
+        {#    padding: 20px;#}
+
+
+        .content h2 {
+            margin-bottom: 20px;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script>
+        function showReq(event) {
+            if (window.location.pathname != '/pending-requests/') {
+                window.location.href = '/pending-requests/';
+            }
+            {#event.preventDefault(); // Prevent the default behavior of the link#}
+            var element = document.getElementById("req");
+            if (element.style.display === 'none') {
+                element.style.display = 'block';
+            } else {
+                element.style.display = 'none';
+            }
+
+        }
+    </script>
+    {#    {% if messages %}#}
+    {##}
+    {#            {% if message == 'True' %}#}
+    {#        <script>#}
+    {#            {% for message in messages %}#}
+    {#                alert("{{ message }}");#}
+    {#                </script>#}
+    {#            {% endif %}#}
+    {#            {% endfor %}#}
+    {#    {% endif %}#}
+
+    {#    {% if messages %}#}
+    {#        <script>#}
+    {#            {% for message in messages %}#}
+    {#                alert("{{ message }}");#}
+    {#            {% endfor %}#}
+    {#        </script>#}
+    {#    {% endif %}#}
+</head>
+<body>
+<header>
+    {% if user.is_authenticated %}
+        <p>{{ request.user.username}}</p>
+    {% endif %}
+    <p></p>
+    <nav>
+        <ul>
+            <li><a href="/home/">Home</a></li>
+            {% if request.user.is_authenticated %}
+                {#                <p>Welcome, {{ user.username }}!</p>#}
+                {#                <a href="{% url 'logout' %}">Logout</a>#}
+                <li><a href="/logout/">logout</a></li>
+{#                <li><button class="icon-button" onclick="showReq()">#}
+{#                    <a >#}
+{#                        <span class="material-icons">notifications</span>#}
+                        {#                <span class="icon-button__badge">2</span>#}
+{#                    </a>#}
+{#                </button>#}
+{#                </li>#}
+            {% else %}
+                <li><a href="/register/">Register</a></li>
+                <li><a href="/login/">Login</a></li>
+                {#                <p>You are not logged in.</p>#}
+                {#                <a href="{% url 'login' %}">Login</a>#}
+            {% endif %}
+
+
+
+
+        </ul>
+    </nav>
+</header>
+
+
+<div class="container" style="display: flex;height: 100vh;">
+
+        <div class="sidebar" style="background-color: #35037a;color: #fff; width: 200px; padding: 20px;">
+            <ul style="list-style-type: none; padding: 0;">
+                <li style="margin-bottom: 10px;color: white;padding: 15px 0px;"><a href="/make_payment/" style="color: white;text-decoration: none"> Make Payment</a></li>
+                <li style="margin-bottom: 10px;color: white;padding: 15px 0;"><a href="/create-payment-request/" style="color: white;text-decoration: none">Make Payment Request</a></li>
+                <li style="margin-bottom: 10px;color: white;padding: 15px 0px;"><a href="/view_user_transactions/" style="color: white;text-decoration: none">Show All Transactions</a></li>
+                <li style="margin-bottom: 10px;color: white;padding: 15px 0px;"><a href="/pending-requests/" style="color: white;text-decoration: none">Pending Requests</a></li>
+
+            </ul>
+        </div>
+
+    <div id="req" style="">
+        <div style="margin: 100px 150px">
+            {#<h1>Pending Payment Requests</h1>#}
+            {% if pending_requests %}
+                <ul class="payment_req_list" style="margin: 0px;padding: 0px; width:980px;border: 2px solid darkblue;">
+                    {% for request in pending_requests %}
+                        <li style="list-style: none;background-color: white; color: black;border-bottom: 1px solid darkblue;">
+                            <p style="display: inline-block;padding: 10px;"><span style=" font-weight: 600;">Request ID:</span> {{ request.id }}</p>
+                            <p style="display: inline-block;padding: 10px;"><span style=" font-weight: 600;">From:</span> {{ request.sender.email }}</p>
+                            <p style="display: inline-block;padding: 10px;"><span style=" font-weight: 600;">To:</span> {{ request.recipient.email }}</p>
+                            <p style="display: inline-block;padding: 10px;"><span style=" font-weight: 600;">Amount:</span> {{ request.amount }}</p>
+                            <p style="display: inline-block;padding: 10px;"><span style=" font-weight: 600;">Status:</span> {{ request.status }}</p>
+                            <p style="display: inline-block;padding: 10px;"> <a href="{% url 'handle_response_to_request' request.id %}">Respond to Request</a></p>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No pending payment requests.</p>
+            {% endif %}
+        </div>
+        {#    <p>Hello </p>#}
+        {#    <div class="content">{% include 'transactions/makepayment.html' %}</div>#}
+    </div>
+        </div>
+
+{#<main>#}
+{#    <section>#}
+{#        <h2>{{ welcome_message }}</h2>#}
+{#        <!-- Add any other content you want to display -->#}
+{#    </section>#}
+{#</main>#}
+<footer>
+    <!-- <p>This is a simple footer.</p> -->
+    <p>&copy; 2024 Your Company</p>
+</footer>
+
+</body>
+</html>
+

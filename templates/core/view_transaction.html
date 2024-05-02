@@ -144,43 +144,58 @@
         }
     </style>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <script>
-        function showReq(event) {
+{#    <script>#}
+{#        function showReq(event) {#}
+{#            if (window.location.pathname != '/pending-requests/') {#}
+{#                window.location.href = '/pending-requests/';#}
+{#            }#}
             {#event.preventDefault(); // Prevent the default behavior of the link#}
-            var element = document.getElementById("req");
-            if (element.style.display === 'none') {
-                element.style.display = 'block';
-            } else {
-                element.style.display = 'none';
-            }
-        }
-    </script>
+{#            var element = document.getElementById("req");#}
+{#            if (element.style.display === 'none') {#}
+{#                element.style.display = 'block';#}
+{#            } else {#}
+{#                element.style.display = 'none';#}
+{#            }#}
+{##}
+{#        }#}
+{#    </script>#}
 </head>
 <body>
 <header>
-    <p>{{ username}}</p>
+    <p>{{ user}}</p>
     <nav>
         <ul>
-            {%if request.user.is_authenticated %}
-                <li><a href="/logout/">Logout</a></li>
-            {% else %}
-                <li><a href="/register/">Register</a></li>
-                <li><a href="/login/">Login</a></li>
-            {% endif %}
             <li><a href="/home/">Home</a></li>
-            <li><button class="icon-button" onclick="showReq()">
-                <a href="/pending-requests/" >
-                    <span class="material-icons" >notifications</span>
-                    {#                <span class="icon-button__badge">2</span>#}
-                </a>
-            </button>
-            </li>
+            {#            <li><a href="/register/">Register</a></li>#}
+            {#            <li><a href="/login/">Login</a></li>#}
+            {#            <li><button class="icon-button" onclick="showReq()">#}
+            {#                <a href="/pending-requests/" >#}
+            {#                    <span class="material-icons" >notifications</span>#}
+            {#                <span class="icon-button__badge">2</span>#}
+            {#                </a>#}
+            {#            </button>#}
+            {#            </li>#}
+            {%if request.user.is_authenticated %}
+                {#                <p>Welcome, {{ user.username }}!</p>#}
+                {#                <a href="{% url 'logout' %}">Logout</a>#}
+                <li><a href="/logout/">logout</a></li>
+{#                <li><button class="icon-button" onclick="showReq()">#}
+{#                    <a >#}
+{#                        <span class="material-icons">notifications</span>#}
+                        {#                <span class="icon-button__badge">2</span>#}
+{#                    </a>#}
+{#                </button>#}
+{#                </li>#}
+                {#                {% else %}#}
+                {#                <li><a href="/register/">Register</a></li>#}
+                {#                <li><a href="/login/">Login</a></li>#}
+            {% endif %}
         </ul>
     </nav>
 </header>
-<div id="req" style="display: none">
-    {% include 'transactions/list_pending_request.html' %}
-</div>
+{#<div id="req" style="display: none">#}
+{#    {% include 'transactions/list_pending_request.html' %}#}
+{#</div>#}
 <div class="container" style="display: flex; height: 100vh; width: 100%; justify-content: space-between">
     <div
             class="sidebar"
@@ -214,18 +229,12 @@
                 >Show All Transactions</a
                 >
             </li>
-            <li style="margin-bottom: 10px; color: white; padding: 15px 0px">
-                <a
-                        href="/pending-requests/"   
-                        style="color: white; text-decoration: none"
-                >Payment Resquest</a
-                >
-            </li>
+            <li style="margin-bottom: 10px;color: white;padding: 15px 0px;"><a href="/pending-requests/" style="color: white;text-decoration: none">Pending Requests</a></li>
         </ul>
     </div>
     <div style="width: 100%; text-align: center">
         <h1 style="text-align: center; color: #35037a">View Transactions</h1>
-        <h2 style="text-decoration: underline; color: #35037a">Recent Transactions</h2> 
+        <h2 style="text-decoration: underline; color: #35037a">Recent Transactions</h2>
         <h2 style=" font-size: 25px; color: #35037a">{{request.user.balance}}</h2>
         <div style="display: flex; width: 100%">
             <div class="inward_tran">
