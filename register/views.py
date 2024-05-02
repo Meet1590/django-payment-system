@@ -129,7 +129,7 @@ def home(request):
         'current_user': user,
     }
     return render(request, 'core/home.html', context=context)
-    return redirect('/home',current_user=user)
+    # return redirect('/home',current_user=user)
 
 
 def view_transactions(request):

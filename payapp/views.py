@@ -10,6 +10,7 @@ from .forms import TransactionForm, PaymentRequestForm
 from .models import Transaction, PaymentRequest
 from .transaction_utils import currency_conversion_via_api
 from decimal import Decimal
+from django.db.models import Q
 
 
 @csrf_exempt
@@ -26,7 +27,10 @@ def make_payment(request):
             dst_email = form.cleaned_data["destination_user_email"]
             dst_user = django.shortcuts.get_object_or_404(CustomUser, username=dst_email)
             amount = form.cleaned_data["amount"]
-
+            if dst_user == src_user:
+                return render(request , 'transactions/make_payment.html' , {"msg":"You can't payment yourself "})
+            if not CustomUser.objects.filter(email = dst_user.email).exists():
+                return render(request , 'transactions/make_payment.html' , {"msg":"Please ensure user is registerd with us"})
             if (src_user.balance > amount) and isinstance(dst_user, CustomUser):
 
                 converted_amount = amount
@@ -65,8 +69,8 @@ def make_payment(request):
                 #               {"Account balance": src_user, "dst_points": dst_user})
                 return redirect('/view_user_transactions/',transaction = t, Account_balance=src_user,dst_points=dst_user)
             else:
-                html = '<h3> Please ensure you have sufficient balance and recipient is registered with us!</h3>'
-                return render(request, html)
+                # html = '<h3> Please ensure you have sufficient balance and recipient is registered with us!</h3>'
+                return render(request , 'transactions/make_payment.html' , {"msg":"Please ensure you have sufficient balance and recipient is registered with us! "})
     else:
         form = TransactionForm()
         # return redirect('/make_payment/',form=form)
@@ -176,7 +180,11 @@ def create_payment_request(request):
 
 def list_pending_requests(request):
     print(request.user)
-    pending_requests = PaymentRequest.objects.filter(recipient=request.user, status='pending')
+    # pending_requests = PaymentRequest.objects.filter(recipient=request.user, status='pending')
+    pending_requests = PaymentRequest.objects.filter(
+        Q(recipient=request.user, status='pending') | Q(sender=request.user, status='rejected')
+    )
+
     return render(request, 'transactions/list_pending_request.html', {'pending_requests': pending_requests})
 
 def handle_response_to_request(request, request_id):
