@@ -219,7 +219,7 @@
         <div style="margin: 100px 150px">
             {#<h1>Pending Payment Requests</h1>#}
             {% if pending_requests %}
-                <ul class="payment_req_list" style="margin: 0px;padding: 0px; width:980px;border: 2px solid darkblue;">
+                <ul class="payment_req_list" style="margin: 0px;padding: 0px; width:100%;border: 2px solid darkblue;">
                     {% for request in pending_requests %}
                         <li style="list-style: none;background-color: white; color: black;border-bottom: 1px solid darkblue;">
                             <p style="display: inline-block;padding: 10px;"><span style=" font-weight: 600;">Request ID:</span> {{ request.id }}</p>

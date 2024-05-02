@@ -168,6 +168,13 @@
 {##}
 {#        }#}
 {#    </script>#}
+    {% if messages %}
+        <script>
+            {% for message in messages %}
+                alert('{{ message }}');
+            {% endfor %}
+        </script>
+    {% endif %}
 </head>
 <body>
 <header>
@@ -252,11 +259,11 @@
                     background-color: #f3f3fb;
                     "
     >
-        <h2>Create Payment Request</h2>
+        <h2 style="color: darkblue;">Create Payment Request</h2>
         <form  method="post">
             {% csrf_token %}
             <div style="margin-bottom: 20px; margin-left: 70px">
-                <label for="recipient" style="font-weight: bold"
+                <label for="recipient" style="font-weight: bold;color: darkblue;"
                 >Recipient Email:</label
                 >
                 <select name="recipient" id="recipient">
@@ -267,7 +274,7 @@
                 </select>
             </div>
             <div style="margin-bottom: 20px; margin-left: 130px">
-                <label for="amount" style="font-weight: bold">Amount:</label>
+                <label for="amount" style="font-weight: bold;color: darkblue;">Amount:</label>
                 <input
                         type="number"
                         id="amount"
@@ -287,8 +294,8 @@
                         type="submit"
                         style="
                                 padding: 10px 20px;
-                                background-color: #002c95;
-                                color: #fff;
+                                background-color: #fff;
+                                color: darkblue;
                                 border: none;
                                 border-radius: 5px;
                                 cursor: pointer;

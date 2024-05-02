@@ -197,62 +197,69 @@
 
     <div
             style="
-					max-width: 400px;
-					margin: 20px auto;
-					padding: 20px;
-					border: 1px solid #ccc;
+					width: 500px;
+					margin: 50px auto;
+					padding: 20px 30px;
+					border: 3px solid lightgray;
 					border-radius: 5px;
-					background-color: #f9f9f9;
+					background-color: #f3f3fb;
+					height: 400px;
+
 				"
     >
-        <h2>Make Payment</h2>
+        <h2 style="text-align: center;margin-bottom: 40px;color: darkblue">Make Payment</h2>
         <form action="/make_payment/" method="post">
-            <div style="margin-bottom: 20px">
-                <label for="account" style="font-weight: bold">Available Balance</label>
+            <div style="margin-bottom: 20px;margin-left: 35px">
+                <label for="account" style="font-weight: bold;color: darkblue">Available Balance:</label>
                 <span id="account">{{request.user.balance}}</span>
             </div>
-            <div style="margin-bottom: 20px">
-                <label for="account" style="font-weight: bold">From Account:</label>
+            <div style="margin-bottom: 20px;margin-left: 35px">
+                <label for="account" style="font-weight: bold;color: darkblue">From Account:</label>
                 <span id="account">Account 1</span>
             </div>
-            <div style="margin-bottom: 20px">
-                <label for="destination_user_email" style="font-weight: bold">Recipient Email:</label>
+            <div style="margin-bottom: 20px;width: 100%;margin-left: 35px">
+                <label for="destination_user_email" style="font-weight: bold;color: darkblue">Recipient Email:</label>
                 <input type="email" id="destination_user_email" name="destination_user_email" required style="
-								width: 100%;
+								width: 60%;
 								padding: 8px;
-								border: 1px solid #ccc;
-								border-radius: 5px;
-								box-sizing: border-box;
+								border: 1px solid #000;
+								{#border-radius: 5px;#}
+								{#box-sizing: border-box;#}
 							" />
             </div>
-            <div style="margin-bottom: 20px">
-                <label for="amount" style="font-weight: bold">Amount:</label>
+            <div style="margin-bottom: 20px;width: 80%;margin-left: 92px">
+                <label for="amount" style="font-weight: bold;color: darkblue">Amount:</label>
                 <input type="number" id="amount" name="amount" min="0" step="0.01" required style="
-								width: 100%;
+								width: 75.5%;
 								padding: 8px;
-								border: 1px solid #ccc;
-								border-radius: 5px;
-								box-sizing: border-box;
+								border: 1px solid #000;
+								{#border-radius: 5px;#}
+								{#box-sizing: border-box;#}
 							" />
             </div>
-            <div style="margin-bottom: 20px">
-                <label for="reference" style="font-weight: bold">Description:</label>
+
+            <div style="margin-bottom: 20px;margin-left: 63px;">
+                <label for="reference" style="font-weight: bold;color: darkblue">Description:</label>
                 <input type="text" id="reference" name="reference" style="
-								width: 100%;
+								width: 69.5%;
 								padding: 8px;
-								border: 1px solid #ccc;
-								border-radius: 5px;
-								box-sizing: border-box;
+								border: 1px solid #000;
+								{#border-radius: 5px;#}
+								{#box-sizing: border-box;#}
 							" />
             </div>
-            <div style="margin-bottom: 20px">
+            <div style="margin-bottom: 20px;text-align: center">
                 <button type="submit" style="
-								padding: 10px 20px;
-								background-color: #007bff;
-								color: #fff;
-								border: none;
-								border-radius: 5px;
-								cursor: pointer;
+                        padding: 10px 20px;
+                        background-color: #fff;
+                        color: darkblue;
+                        border: none !important;
+                        border-radius: 5px;
+                        cursor: pointer;
+                        {#margin-left: 30%;#}
+                        font-size: 15px;
+                        width: 50%;
+
 							">
                     Make Payment
                 </button>
