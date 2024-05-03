@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Home</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -124,49 +124,11 @@
             /* padding: 15px 0px; */
         }
 
-        {#.content {#}
-        {#    flex: 1;#}
-        {#    padding: 20px;#}
-
-
         .content h2 {
             margin-bottom: 20px;
         }
     </style>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-{#    <script>#}
-{#        function showReq(event) {#}
-{#            if (window.location.pathname != '/pending-requests/') {#}
-{#                window.location.href = '/pending-requests/';#}
-{#            }#}
-            {#event.preventDefault(); // Prevent the default behavior of the link#}
-{#            var element = document.getElementById("req");#}
-{#            if (element.style.display === 'none') {#}
-{#                element.style.display = 'block';#}
-{#            } else {#}
-{#                element.style.display = 'none';#}
-{#            }#}
-{##}
-{#        }#}
-{#    </script>#}
-{#    {% if messages %}#}
-{##}
-        {#            {% if message == 'True' %}#}
-{#        <script>#}
-{#            {% for message in messages %}#}
-{#                alert("{{ message }}");#}
-{#                </script>#}
-                {#            {% endif %}#}
-{#            {% endfor %}#}
-{#    {% endif %}#}
-
-    {#    {% if messages %}#}
-    {#        <script>#}
-    {#            {% for message in messages %}#}
-    {#                alert("{{ message }}");#}
-    {#            {% endfor %}#}
-    {#        </script>#}
-    {#    {% endif %}#}
 </head>
 <body>
 <header>
@@ -176,7 +138,7 @@
     <p></p>
     <nav>
         <ul>
-            <li><a href="/home/">Home</a></li>
+            <li><a href="/">Home</a></li>
             {% if request.user.is_authenticated %}
                 {#                <p>Welcome, {{ user.username }}!</p>#}
                 {#                <a href="{% url 'logout' %}">Logout</a>#}

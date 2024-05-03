@@ -25,12 +25,24 @@ SECRET_KEY = 'django-insecure-w-oif8^!_j&rzdhwabkw^ypr#h**-ovjntkj_a%#_2z^!qkut3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+#SECURE_SSL_REDIRECT = True
+ALLOWED_HOSTS = ['*']
+
+
+# HTTPS settings
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# SSL certificate and key paths
+SSL_CERTIFICATE = 'C:/Users/Meet/IdeaProjects/webapps2024/webapps2024.cert'
+SSL_KEY = 'C:/Users/Meet/IdeaProjects/webapps2024/webapps2024.key'
 
 
 # Application definition
-
 INSTALLED_APPS = [
+    'sslserver',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -45,7 +57,7 @@ INSTALLED_APPS = [
     ]
 
 AUTHENTICATION_BACKENDS = [
-    'register.cutom_backend.CustomAuthBackend', #ignored due to errors
+    'register.cutom_backend.CustomAuthBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
 

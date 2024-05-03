@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.shortcuts import render, redirect
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_protect
 import django.shortcuts
 from django.contrib import messages
 
@@ -12,51 +12,67 @@ from .transaction_utils import currency_conversion_via_api
 from decimal import Decimal
 from django.db.models import Q
 
+"""
+@csrf_protect: Protects from CSRF tokens only.
+@login_required: Check if user is logged in.
+@transaction.atomic: Helps to achieve atomic/transaction safety.
+"""
 
-@csrf_exempt
+
+@csrf_protect
 @login_required
 @transaction.atomic
 def make_payment(request):
+    """
+    Helps to make payment
+    :param request:
+    :return: Transaction view with updated last payment
+    """
     if request.method == 'POST':
+
+        # Catches data from transaction form
         form = TransactionForm(request.POST)
-        # print(form)
-        # print(form.is_valid())
         if form.is_valid():
             src_email = request.user.email
             src_user = django.shortcuts.get_object_or_404(CustomUser, email=src_email)
             dst_email = form.cleaned_data["destination_user_email"]
             dst_user = django.shortcuts.get_object_or_404(CustomUser, username=dst_email)
             amount = form.cleaned_data["amount"]
+
+            # User cannot pay himself as it violates consistency required in ACID properties.
             if dst_user == src_user:
-                return render(request , 'transactions/make_payment.html' , {"msg":"You can't payment yourself "})
-            if not CustomUser.objects.filter(email = dst_user.email).exists():
-                return render(request , 'transactions/make_payment.html' , {"msg":"Please ensure user is registerd with us"})
+                return render(request, 'transactions/make_payment.html', {"msg": "You can't payment yourself "})
+
+            # Checks if destination user entered by user it registered or not.
+            if not CustomUser.objects.filter(email=dst_user.email).exists():
+                return render(request, 'transactions/make_payment.html',
+                              {"msg": "Please ensure user is registerd with us"})
+
+            # Checks condition that amount of transfer is less than the balance or not
             if (src_user.balance > amount) and isinstance(dst_user, CustomUser):
 
                 converted_amount = amount
+
+                # Handles currency conversion via separate API call using GET request.
+                print(f"src currency {src_user.currency} and destination currency {dst_user.currency}")
                 if src_user.currency != dst_user.currency:
                     print("==-=-=-==-------- currency is not same =========>")
-                    response =  currency_conversion_via_api(src_user.currency, dst_user.currency, amount)
-                    print("response ==============>",response)
+                    response = currency_conversion_via_api(src_user.currency, dst_user.currency, amount)
+                    print("response ==============>", response)
                     amount = response['amount']
                     converted_amount = response['converted_amount']
                     converted_amount_decimal = Decimal(converted_amount)
                     converted_amount = converted_amount_decimal
-                # print(amount)
-                #deduct from sender
-                # amount = response['amount']
-                # converted_amount = response['converted_amount']
-                # converted_amount_decimal = Decimal(converted_amount)
 
+                # Deduct amount from user
                 src_user.balance = src_user.balance - amount
                 src_user.save()
 
-                # print(converted_amount)
-                #increse in receiever
+                # Increase converted/amount in recipient
                 dst_user.balance = dst_user.balance + converted_amount
                 dst_user.save()
-                # print("converted_amount_decimal  =--=-==-=-=-=->", converted_amount_decimal)
-                # Save the transaction
+
+                # Saving the transaction in Database
                 t = Transaction(
                     source_user_email=src_user,
                     destination_user_email=dst_user,
@@ -65,29 +81,36 @@ def make_payment(request):
                 )
                 t.save()
 
-                # return render(request, "core/view_transaction.html",
-                #               {"Account balance": src_user, "dst_points": dst_user})
-                return redirect('/view_user_transactions/',transaction = t, Account_balance=src_user,dst_points=dst_user)
+                return redirect('/view_user_transactions/', transaction=t, Account_balance=src_user,
+                                dst_points=dst_user, converted_amount=converted_amount)
             else:
                 # html = '<h3> Please ensure you have sufficient balance and recipient is registered with us!</h3>'
-                return render(request , 'transactions/make_payment.html' , {"msg":"Please ensure you have sufficient balance and recipient is registered with us! "})
+                return render(request, 'transactions/make_payment.html', {
+                    "msg": "Please ensure you have sufficient balance and recipient is registered with us! "})
     else:
         form = TransactionForm()
-        # return redirect('/make_payment/',form=form)
+
     return render(request, "transactions/make_payment.html", context={
-        'form':form
+        'form': form
     })
 
 
-@csrf_exempt
+@csrf_protect
 @login_required
 def show_balance(request):
+    """
+    Renders user's balance
+    :param request: Http request object
+    :return: html
+    """
     # Add logic to retrieve and display balance information
     return render(request, 'core/view_transaction.html', {})
 
-@csrf_exempt
+
+@csrf_protect
 @login_required
 def admin(request):
+
     transactions = Transaction.objects.all()
     users = CustomUser.objects.all()
 
@@ -108,6 +131,7 @@ def admin(request):
     return render(request, 'core/admin.html', {'transactions': transactions_data, 'users': users_data})
 
 
+@csrf_protect
 @login_required
 def view_user_transactions(request):
     user = CustomUser.objects.get(email=request.user.email)
@@ -125,6 +149,8 @@ def view_user_transactions(request):
     # Render the template with the populated data
     return render(request, 'core/view_transaction.html', context)
 
+
+@csrf_protect
 @login_required
 def dashboard_view(request):
     user = CustomUser.objects.get(username=request.user)
@@ -139,11 +165,10 @@ def dashboard_view(request):
     return render(request, 'core/dashboard.html', context=user_data)
 
 
-
 ####################################################
 #Payment request views
 
-
+@csrf_protect
 @login_required
 def create_payment_request(request):
     users = CustomUser.objects.all()
@@ -178,6 +203,9 @@ def create_payment_request(request):
         form = PaymentRequestForm()
     return render(request, 'transactions/create_payment_request.html', {'form': form, 'users': users})
 
+
+@csrf_protect
+@login_required
 def list_pending_requests(request):
     print(request.user)
     # pending_requests = PaymentRequest.objects.filter(recipient=request.user, status='pending')
@@ -187,6 +215,9 @@ def list_pending_requests(request):
 
     return render(request, 'transactions/list_pending_request.html', {'pending_requests': pending_requests})
 
+
+@csrf_protect
+@login_required
 def handle_response_to_request(request, request_id):
     payment_request = PaymentRequest.objects.get(pk=request_id)
     print(payment_request)
@@ -197,28 +228,25 @@ def handle_response_to_request(request, request_id):
         if action == 'accept':
             payment_request.status = 'accepted'
 
-            # form = TransactionForm(request.POST)
-            # print(form)
-            # print(form.is_valid())
-            # if form.is_valid():
-            #     src_email = request.user.email
             src_user = django.shortcuts.get_object_or_404(CustomUser, username=payment_request.recipient)
-            print("src_user  ============>",src_user)
+            print("src_user  ============>", src_user)
             dst_user = django.shortcuts.get_object_or_404(CustomUser, username=payment_request.sender)
-            print("dst_user  ===================>",dst_user)
+            print("dst_user  ===================>", dst_user)
             amount = payment_request.amount
+
             if (src_user.balance > amount) and isinstance(dst_user, CustomUser):
                 converted_amount = amount
+
                 if src_user.currency != dst_user.currency:
-                    response =  currency_conversion_via_api(src_user.currency, dst_user.currency, amount)
+                    response = currency_conversion_via_api(src_user.currency, dst_user.currency, amount)
                     print(response)
                     amount = response['amount']
                     converted_amount = response['converted_amount']
                     converted_amount_decimal = Decimal(converted_amount)
                     converted_amount = converted_amount_decimal
                 print(amount)
+
                 #deduct from sender
-               
 
                 src_user.balance = src_user.balance - amount
                 src_user.save()
@@ -230,8 +258,8 @@ def handle_response_to_request(request, request_id):
 
                 # Save the transaction
                 t = Transaction(
-                    source_user_email= CustomUser.objects.get(email=src_user.email),
-                    destination_user_email= CustomUser.objects.get(email=dst_user.email),
+                    source_user_email=CustomUser.objects.get(email=src_user.email),
+                    destination_user_email=CustomUser.objects.get(email=dst_user.email),
                     amount=amount,
                     currency=src_user.currency
                 )
@@ -240,7 +268,8 @@ def handle_response_to_request(request, request_id):
             # Send notification to sender user
         elif action == 'reject':
             payment_request.status = 'rejected'
-            # Send notification to sender user
+
+        # Send notification to sender user
         payment_request.save()
         print(payment_request.status)
         return redirect('pending_requests')

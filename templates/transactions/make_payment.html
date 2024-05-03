@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Header with Options</title>
+    <title>Make Payment</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -134,49 +134,18 @@
         }
     </style>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    {#    <script>#}
-    {#        function showReq(event) {#}
-    {#            if (window.location.pathname != '/pending-requests/') {#}
-    {#                window.location.href = '/pending-requests/';#}
-    {#            }#}
-    {#event.preventDefault(); // Prevent the default behavior of the link#}
-    {#            var element = document.getElementById("req");#}
-    {#            if (element.style.display === 'none') {#}
-    {#                element.style.display = 'block';#}
-    {#            } else {#}
-    {#                element.style.display = 'none';#}
-    {#            }#}
-    {##}
-    {#        }#}
-    {#    </script>#}
 </head>
 <body>
 <header>
     <p>{{request.user.username}}</p>
     <nav>
         <ul>
-            <li><a href="/home/">Home</a></li>
-            {#            <li><a href="/register/">Register</a></li>#}
-            {#            <li><a href="/login/">Login</a></li>#}
-            {#            <li><button class="icon-button" onclick="showReq()">#}
-            {#                <a href="/pending-requests/" >#}
-            {#                    <span class="material-icons" >notifications</span>#}
-            {#                <span class="icon-button__badge">2</span>#}
-            {#                </a>#}
-            {#            </button>#}
-            {#            </li>#}
+            <li><a href="/">Home</a></li>
+
             {% if request.user.is_authenticated %}
-                {#                <p>Welcome, {{ user.username }}!</p>#}
-                {#                <a href="{% url 'logout' %}">Logout</a>#}
                 <li><a href="/logout/">logout</a></li>
-                {#                <li><button class="icon-button" onclick="showReq()">#}
-                {#                    <a >#}
-                {#                        <span class="material-icons">notifications</span>#}
-                {#                <span class="icon-button__badge">2</span>#}
-                {#                    </a>#}
-                {#                </button>#}
-                {#                </li>#}
             {% endif %}
+
         </ul>
     </nav>
 </header>
@@ -192,8 +161,6 @@
             <li style="margin-bottom: 10px;color: white;padding: 15px 0px;"><a href="/pending-requests/" style="color: white;text-decoration: none">Pending Requests</a></li>
         </ul>
     </div>
-    {#    <p>Hello </p>#}
-    {#    <div class="content">{% include 'transactions/makepayment.html' %}</div>#}
 
     <div
             style="
@@ -208,7 +175,9 @@
 				"
     >
         <h2 style="text-align: center;margin-bottom: 40px;color: darkblue">Make Payment</h2>
+        <p style="text-align: center">{{ msg }}</p>
         <form action="/make_payment/" method="post">
+            {% csrf_token %}
             <div style="margin-bottom: 20px;margin-left: 35px">
                 <label for="account" style="font-weight: bold;color: darkblue">Available Balance:</label>
                 <span id="account">{{request.user.balance}}</span>
